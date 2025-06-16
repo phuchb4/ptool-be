@@ -1,20 +1,19 @@
-// app.js hoặc server.js
 const express = require('express');
-const app = express();
-const port = 3000;
+const cors = require('cors');
+const { swaggerUi, swaggerSpec } = require('./swagger/swaggerConfig'); // Đường dẫn tới file trên
+const productRoutes = require('./routes/product.routes');
 
-const { swaggerUi, swaggerSpec } = require('./swagger/swaggerConfig');
+const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 
-// Swagger route
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api/v1', productRoutes);
 
-// Routes của bạn
-const productRoutes = require('./routes/product.routes');
-app.use('/api/products', productRoutes);
+app.use('/api/documentation', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-app.listen(port, () => {
-    console.log(`Server chạy ở http://localhost:${port}`);
-    console.log(`Swagger docs: http://localhost:${port}/api-docs`);
+app.listen(8000, '0.0.0.0', () => {
+    console.log('Server running at http://192.168.88.232:8000');
+    console.log('Swagger docs at http://192.168.88.232:8000/api/documentation');
 });

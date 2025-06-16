@@ -1,41 +1,66 @@
 // routes/product.routes.js
 const express = require('express');
+const jwt = require('jsonwebtoken');
 const router = express.Router();
 
-/**
- * @swagger
- * /api/products:
- *   get:
- *     summary: Lấy tất cả sản phẩm
- *     tags: [Products]
- *     responses:
- *       200:
- *         description: Danh sách sản phẩm
- */
-router.get('/', (req, res) => {
-    res.json(['Sản phẩm 1', 'Sản phẩm 2']);
-});
+const SECRET_KEY = 'Joeyvlr2004@';
 
 /**
  * @swagger
- * /api/products/{id}:
- *   get:
- *     summary: Lấy sản phẩm theo ID
+ * /api/v1/login:
+ *   post:
+ *     summary: Login
  *     tags: [Products]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID sản phẩm
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
  *     responses:
  *       200:
- *         description: Thông tin sản phẩm
+ *         description: Login Successful!
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 token:
+ *                   type: string
+ *       401:
+ *         description: Login Failed!
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
  */
-router.get('/:id', (req, res) => {
-    const id = req.params.id;
-    res.json({ id, name: `Sản phẩm ${id}` });
+router.post('/login', (req, res) => {
+    const { email, password } = req.body;
+    if (email === 'phuchb@gmail.com' && password === '123456') {
+        const payload = { email };
+
+        const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
+
+        return res.status(200).json({
+            message: 'Login Successful!',
+            token,
+        });
+    } else {
+        res.status(401).json({ message: 'Login failed!' });
+    }
 });
 
 module.exports = router;
