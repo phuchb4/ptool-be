@@ -27,7 +27,7 @@ const SECRET_KEY = 'Joeyvlr2004@';
  *                 type: string
  *     responses:
  *       200:
- *         description: Login Successful!
+ *         description: Đăng nhập thành công!
  *         content:
  *           application/json:
  *             schema:
